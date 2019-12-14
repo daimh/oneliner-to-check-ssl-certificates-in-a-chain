@@ -1,0 +1,1 @@
+# oneliner-to-check-ssl-certificates-in-a-chain
