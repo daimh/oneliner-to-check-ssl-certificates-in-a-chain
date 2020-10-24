@@ -4,7 +4,7 @@
 openssl s_client -showcerts -connect google.com:443 < /dev/null | sed -ne "/^-----B/,/^-----E/p" | sed -e "s/^-----B/cat << EOF | openssl x509 -noout -text -in - \n-----B/; s/\(^-----E.*\)/\1\nEOF/" | bash
 ```
 
-* or spedifically check 'Signature Algorithm'  
+* or specifically check 'Signature Algorithm'  
 ```
 openssl s_client -showcerts -connect google.com:443 < /dev/null | sed -ne "/^-----B/,/^-----E/p" | sed -e "s/^-----B/cat << EOF | openssl x509 -noout -text -in - \n-----B/; s/\(^-----E.*\)/\1\nEOF/" | bash | grep 'e A'
 ```
