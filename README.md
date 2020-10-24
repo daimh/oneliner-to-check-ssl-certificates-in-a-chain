@@ -12,12 +12,27 @@ openssl s_client -showcerts -connect google.com:443 < /dev/null | sed -ne "/^---
 * Lars Noodén sent me this alternative! Very neat awk usage, thumbs up!
 ```
 openssl s_client \
-        -showcerts \
-        -connect google.com:443 \
-        < /dev/null 2>/dev/null \
+	-showcerts \
+	-connect google.com:443 \
+	< /dev/null 2>/dev/null \
 | sed -n -e '/^-----B/,/^-----E/p' \
 | awk -v a="openssl x509 -noout -text -in -" \
-        '$1 {print RS $0|a; close(a)}' RS="-----BEGIN" \
+	'$1 {print RS $0|a; close(a)}' RS="-----BEGIN" \
 | sed -n -r -e 's/^ {4}(Signature)/\1/p'
 ```
 
+* Adam Bisaro's cool awk too! thumbs up again!
+```
+openssl s_client \
+	-showcerts \
+	-connect google.com:443 \
+	< /dev/null 2> /dev/null | \
+awk -v x509="openssl x509 -noout -text" \
+	'/BEGIN CERT/,/END CERT/ {
+		print | x509
+		if ( $0 ~ /END/ ){
+			close(x509);
+			printf("\n");
+		}
+	}'
+```
